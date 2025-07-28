@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "private": true,
+  "proxy": "http://localhost:5000",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -11,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.11.0",
     "bootstrap": "^5.3.7",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",

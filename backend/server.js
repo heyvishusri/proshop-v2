@@ -5,6 +5,7 @@ dotenv.config();
 import products from "./data/products.js";
 
 const port = process.env.PORT || 5000;
+
 const app = express();
 
 app.get("/", (req, res) => {
@@ -12,7 +13,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/products", (req, res) => {
-  res.json(products);
+  try {
+    res.json(products);
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 app.get("/api/products/:id", (req, res) => {
