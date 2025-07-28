@@ -1,0 +1,25 @@
+{
+  "name": "proshop-v2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heyvishusri/proshop-v2.git"
+  },
+  "keywords": [],
+  "author": "Vishusri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/heyvishusri/proshop-v2/issues"
+  },
+  "homepage": "https://github.com/heyvishusri/proshop-v2#readme",
+  "description": "eCommerce application built with MERN stack",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
