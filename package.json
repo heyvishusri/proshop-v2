@@ -9,7 +9,9 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
-    "client": "npm start --prefix frontend"
+    "client": "npm start --prefix frontend",
+    "data:import": "node backend/models/seeder.js",
+    "data:destroy": "node backend/models/seeder.js -d"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
   "description": "eCommerce application built with MERN stack",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "colors": "^1.4.0",
     "express": "^5.1.0",
     "mongoose": "^8.17.0"
   },
