@@ -1,34 +1,13 @@
 import express from "express";
-const router = express.Router();
 import asyncHandler from "../middleware/asyncHandler.js";
-import Product from "../models/productModel.js";
+import {
+  getProduct,
+  getProductById,
+} from "../controllers/productController.js";
 
-router.get(
-  "/",
-  asyncHandler(async (req, res) => {
-    try {
-      const products = await Product.find({});
+const router = express.Router();
 
-      res.json(products);
-    } catch (error) {
-      console.error("Server error:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  })
-);
-
-router.get(
-  "/:id",
-  asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id);
-
-    if (product) {
-      return res.json(product);
-    } else {
-      res.status(404);
-      throw new Error("Resource not found");
-    }
-  })
-);
+router.route("/").get(asyncHandler(getProduct)); // Fetch all products
+router.route("/:id").get(asyncHandler(getProductById)); // Fetch product by ID
 
 export default router;
