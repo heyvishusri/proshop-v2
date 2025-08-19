@@ -1,12 +1,16 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import Badge from "react-bootstrap/Badge";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
+import { useSelector } from "react-redux";
 import logo from "../assets/logo.png";
 
 function CollapsibleExample() {
+  const { cartItems } = useSelector((state) => state.cart);
+  console.log(cartItems);
   return (
     <Navbar
       collapseOnSelect
@@ -30,6 +34,11 @@ function CollapsibleExample() {
             <LinkContainer to="/cart">
               <Nav.Link>
                 <FaShoppingCart /> Cart
+                {cartItems.length > 0 && (
+                  <Badge pill bg="success" style={{ marginLeft: "5px" }}>
+                    {cartItems.reduce((a, c) => a + c.qty, 0)}
+                  </Badge>
+                )}
               </Nav.Link>
             </LinkContainer>
             <LinkContainer to="/login">
