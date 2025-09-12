@@ -51,3 +51,12 @@ table th {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
 }
+/* Add this to your CSS file (e.g., App.css) */
+.fixed-footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #f8f9fa; /*Optional: match your footer background*/
+  z-index: 100;
+}
