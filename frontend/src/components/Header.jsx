@@ -3,6 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import Badge from "react-bootstrap/Badge";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
@@ -10,7 +11,11 @@ import logo from "../assets/logo.png";
 
 function CollapsibleExample() {
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems);
+  const { userInfo } = useSelector((state) => state.auth);
+  const logoutHandler = () => {
+    console.log("logout");
+  };
+  // console.log(cartItems);
   return (
     <Navbar
       collapseOnSelect
@@ -41,11 +46,22 @@ function CollapsibleExample() {
                 )}
               </Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/login">
-              <Nav.Link eventKey={2}>
-                <FaUser /> Sign In
-              </Nav.Link>
-            </LinkContainer>
+            {userInfo ? (
+              <NavDropdown title={userInfo.name} id="username">
+                <LinkContainer to="/profile">
+                  <NavDropdown.Item>Profile</NavDropdown.Item>
+                </LinkContainer>
+                <NavDropdown.Item onClick={logoutHandler}>
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <LinkContainer to="/login">
+                <Nav.Link eventKey={2}>
+                  <FaUser /> Sign In
+                </Nav.Link>
+              </LinkContainer>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
