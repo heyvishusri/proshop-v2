@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Badge from "react-bootstrap/Badge";
@@ -76,6 +76,20 @@ function CollapsibleExample() {
                   <FaUser /> Sign In
                 </Nav.Link>
               </LinkContainer>
+            )}
+            {/* Admin Links */}
+            {userInfo && userInfo.isAdmin && (
+              <NavDropdown title="Admin" id="adminmenu">
+                <NavDropdown.Item as={Link} to="/admin/productlist">
+                  Products
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/admin/orderlist">
+                  Orders
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/admin/userlist">
+                  Users
+                </NavDropdown.Item>
+              </NavDropdown>
             )}
           </Nav>
         </Navbar.Collapse>
