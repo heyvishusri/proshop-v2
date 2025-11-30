@@ -10,7 +10,7 @@ import {
   ListGroup,
   Card,
   Button,
-  ListGroupItem,
+  ListGroupItem
 } from "react-bootstrap";
 
 import Rating from "../components/Rating";
@@ -28,7 +28,7 @@ const ProductScreen = () => {
   const {
     data: product,
     isLoading,
-    error,
+    error
   } = useGetProductDetailsQuery(productId);
   const addToCartHandler = () => {
     dispatch(addToCart({ ...product, qty }));
