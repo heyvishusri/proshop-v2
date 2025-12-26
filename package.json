@@ -31,7 +31,8 @@
     "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0"
+    "mongoose": "^8.17.0",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",
