@@ -1,12 +1,21 @@
 import path from "path";
 import express from "express";
 import multer from "multer";
+import fs from "fs";
 
 const router = express.Router();
 
+// Ensure uploads directory exists
+const __dirname = path.resolve();
+const uploadsDir = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, uploadsDir);
   },
   filename(req, file, cb) {
     cb(
@@ -40,9 +49,16 @@ router.post("/", (req, res) => {
       return res.status(400).send({ message: err.message });
     }
 
+    if (!req.file) {
+      return res.status(400).send({ message: "No file uploaded" });
+    }
+
+    // Return path relative to root for consistent serving
+    const filePath = req.file.path.replace(__dirname, "").replace(/\\/g, "/");
+    
     res.status(200).send({
       message: "Image uploaded successfully",
-      image: `/${req.file.path}`
+      image: filePath
     });
   });
 });

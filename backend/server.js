@@ -29,17 +29,20 @@ app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
 );
 
+const __dirname = path.resolve();
+
+// Serve uploaded images (works in both dev and production)
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 if (process.env.NODE_ENV === "production") {
-  const __dirname = path.resolve();
-  app.use("/uploads", express.static("/var/data/uploads"));
+  // Serve frontend static files
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-  app.get(/.*/, (req, res) => {
+  // Serve index.html for all non-API routes
+  app.get(/^(?!\/api).*/, (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 } else {
-  const __dirname = path.resolve();
-  app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
   app.get("/", (req, res) => {
     res.send("API is running....");
   });
