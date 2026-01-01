@@ -26,9 +26,10 @@ function fileFilter(req, file, cb) {
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new Error("Images only!"), false);
+    cb(new Error('Images only!'), false);
   }
 }
+
 
 const upload = multer({ storage, fileFilter });
 const uploadSingleImage = upload.single("image");
