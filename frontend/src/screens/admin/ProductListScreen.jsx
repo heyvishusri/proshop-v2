@@ -47,13 +47,13 @@ const ProductListScreen = () => {
   };
 
   return (
-    <>
-      <Row className="align-items-center">
-        <Col>
-          <h1>Products</h1>
+    <div className="w-full max-w-full overflow-x-hidden">
+      <Row className="align-items-center w-full max-w-full mx-0 mb-3">
+        <Col xs={12} sm={6} className="mb-2 sm:mb-0">
+          <h1 className="text-xl sm:text-2xl m-0">Products</h1>
         </Col>
-        <Col className="text-end">
-          <Button className="my-3" onClick={createProductHandler}>
+        <Col xs={12} sm={6} className="text-start sm:text-end">
+          <Button className="w-full sm:w-auto my-3" onClick={createProductHandler}>
             <FaPlus /> Create Product
           </Button>
         </Col>
@@ -69,7 +69,8 @@ const ProductListScreen = () => {
         </Message>
       ) : (
         <>
-          <Table striped bordered hover responsive className="table-sm">
+          <div className="table-responsive-wrapper">
+            <Table striped bordered hover responsive className="table-sm w-full">
             <thead>
               <tr>
                 <th>ID</th>
@@ -109,10 +110,13 @@ const ProductListScreen = () => {
               ))}
             </tbody>
           </Table>
-          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
+          </div>
+          <div className="w-full max-w-full overflow-x-auto mt-3">
+            <Paginate pages={data.pages} page={data.page} isAdmin={true} />
+          </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

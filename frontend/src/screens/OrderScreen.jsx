@@ -113,21 +113,21 @@ const OrderScreen = () => {
       {error?.data?.message || error?.error || "Something went wrong"}
     </Message>
   ) : (
-    <>
-      <h1>Order {order._id}</h1>
-      <Row>
-        <Col md={8}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h2>Shipping</h2>
-              <p>
+    <div className="w-full max-w-full overflow-x-hidden">
+      <h1 className="text-xl sm:text-2xl mb-4">Order {order._id}</h1>
+      <Row className="w-full max-w-full mx-0">
+        <Col xs={12} md={8} className="mb-4 md:mb-0">
+          <ListGroup variant="flush" className="w-full">
+            <ListGroup.Item className="w-full">
+              <h2 className="text-lg sm:text-xl mb-2">Shipping</h2>
+              <p className="text-sm sm:text-base break-words">
                 <strong>Name: </strong> {order.user.name}
               </p>
-              <p>
+              <p className="text-sm sm:text-base break-words">
                 <strong>Email: </strong>{" "}
-                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+                <a href={`mailto:${order.user.email}`} className="break-all">{order.user.email}</a>
               </p>
-              <p>
+              <p className="text-sm sm:text-base break-words">
                 <strong>Address:</strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
                 {order.shippingAddress.postalCode},{" "}
@@ -160,24 +160,25 @@ const OrderScreen = () => {
               {order.orderItems.length === 0 ? (
                 <Message>Order is empty</Message>
               ) : (
-                <ListGroup variant="flush">
+                <ListGroup variant="flush" className="w-full">
                   {order.orderItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
-                      <Row>
-                        <Col md={1}>
+                    <ListGroup.Item key={index} className="w-full px-0 sm:px-2">
+                      <Row className="w-full mx-0 items-center">
+                        <Col xs={4} sm={3} md={2} className="mb-2 sm:mb-0">
                           <Image
                             src={item.image}
                             alt={item.name}
                             fluid
                             rounded
+                            className="w-full h-auto object-contain"
                           />
                         </Col>
-                        <Col>
-                          <Link to={`/product/${item.product}`}>
+                        <Col xs={12} sm={6} md={6} className="mb-2 sm:mb-0">
+                          <Link to={`/product/${item.product}`} className="text-sm sm:text-base break-words">
                             {item.name}
                           </Link>
                         </Col>
-                        <Col md={4}>
+                        <Col xs={8} sm={3} md={4} className="text-sm sm:text-base">
                           {item.qty} x ${item.price} = ${item.qty * item.price}
                         </Col>
                       </Row>
@@ -188,8 +189,8 @@ const OrderScreen = () => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}>
-          <Card>
+        <Col xs={12} md={4} className="mt-4 md:mt-0">
+          <Card className="w-full max-w-full sticky top-20">
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h2>Order Summary</h2>
@@ -228,13 +229,13 @@ const OrderScreen = () => {
                     <div>
                       {/* THIS BUTTON IS FOR TESTING! REMOVE BEFORE PRODUCTION! */}
                       <Button
-                        style={{ marginBottom: "10px" }}
+                        className="w-full mb-2"
                         onClick={onApproveTest}
                       >
                         Test Pay Order
                       </Button>
 
-                      <div>
+                      <div className="w-full overflow-x-auto">
                         <PayPalButtons
                           createOrder={createOrder}
                           onApprove={onApprove}
@@ -255,7 +256,7 @@ const OrderScreen = () => {
                   <ListGroup.Item>
                     <Button
                       type="button"
-                      className="btn btn-block"
+                      className="w-full"
                       onClick={deliverOrderHandler}
                     >
                       Mark As Delivered
@@ -266,7 +267,7 @@ const OrderScreen = () => {
           </Card>
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 

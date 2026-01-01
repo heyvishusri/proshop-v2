@@ -83,12 +83,12 @@ const ProductEditScreen = () => {
   };
 
   return (
-    <>
+    <div className="w-full max-w-full overflow-x-hidden">
       <Link to="/admin/productlist" className="btn btn-light my-3">
         Go Back
       </Link>
       <FormContainer>
-        <h1>Edit Product</h1>
+        <h1 className="text-xl sm:text-2xl mb-4">Edit Product</h1>
         {loadingUpdate && <Loader />}
         {isLoading ? (
           <Loader />
@@ -177,14 +177,14 @@ const ProductEditScreen = () => {
             <Button
               type="submit"
               variant="primary"
-              style={{ marginTop: "1rem" }}
+              className="w-full sm:w-auto mt-4"
             >
               Update
             </Button>
           </Form>
         )}
       </FormContainer>
-    </>
+    </div>
   );
 };
 

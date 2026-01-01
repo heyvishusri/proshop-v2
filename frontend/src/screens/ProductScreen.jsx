@@ -66,7 +66,7 @@ const ProductScreen = () => {
   };
 
   return (
-    <>
+    <div className="w-full max-w-full overflow-x-hidden">
       <Link className="btn btn-light my-3" to="/">
         Go Back
       </Link>
@@ -79,11 +79,11 @@ const ProductScreen = () => {
       ) : (
         <>
           <Meta title={product.name} description={product.description} />
-          <Row>
-            <Col md={6}>
-              <Image src={product.image} alt={product.name} fluid />
+          <Row className="w-full max-w-full mx-0">
+            <Col xs={12} md={6} className="mb-4 md:mb-0">
+              <Image src={product.image} alt={product.name} fluid className="w-full h-auto object-contain max-h-96" />
             </Col>
-            <Col md={3}>
+            <Col xs={12} md={3} className="mb-4 md:mb-0">
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
@@ -100,21 +100,21 @@ const ProductScreen = () => {
                 </ListGroup.Item>
               </ListGroup>
             </Col>
-            <Col md={3}>
-              <Card>
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Price:</Col>
-                      <Col>
+            <Col xs={12} md={3} className="mb-4 md:mb-0">
+              <Card className="w-full max-w-full sticky top-20">
+                <ListGroup variant="flush" className="w-full">
+                  <ListGroup.Item className="w-full">
+                    <Row className="w-full">
+                      <Col className="text-sm sm:text-base">Price:</Col>
+                      <Col className="text-sm sm:text-base">
                         <strong>${product.price}</strong>
                       </Col>
                     </Row>
                   </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Status:</Col>
-                      <Col>
+                  <ListGroup.Item className="w-full">
+                    <Row className="w-full">
+                      <Col className="text-sm sm:text-base">Status:</Col>
+                      <Col className="text-sm sm:text-base">
                         {product.countInStock > 0 ? "In Stock" : "Out Of Stock"}
                       </Col>
                     </Row>
@@ -122,14 +122,15 @@ const ProductScreen = () => {
 
                   {/* Qty Select */}
                   {product.countInStock > 0 && (
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Qty</Col>
+                    <ListGroup.Item className="w-full">
+                      <Row className="w-full">
+                        <Col className="text-sm sm:text-base">Qty</Col>
                         <Col>
                           <Form.Control
                             as="select"
                             value={qty}
                             onChange={(e) => setQty(Number(e.target.value))}
+                            className="w-full text-sm sm:text-base"
                           >
                             {[...Array(product.countInStock).keys()].map(
                               (x) => (
@@ -144,9 +145,9 @@ const ProductScreen = () => {
                     </ListGroup.Item>
                   )}
 
-                  <ListGroup.Item>
+                  <ListGroup.Item className="w-full">
                     <Button
-                      className="btn-block"
+                      className="w-full"
                       type="button"
                       disabled={product.countInStock === 0}
                       onClick={addToCartHandler}
@@ -158,8 +159,8 @@ const ProductScreen = () => {
               </Card>
             </Col>
           </Row>
-          <Row className="review">
-            <Col md={6}>
+          <Row className="review mt-4 sm:mt-8">
+            <Col xs={12} md={6} className="w-full max-w-full">
               <h2>Reviews</h2>
               {product.reviews.length === 0 && <Message>No Reviews</Message>}
               <ListGroup variant="flush">
@@ -223,7 +224,7 @@ const ProductScreen = () => {
           </Row>
         </>
       )}
-    </>
+    </div>
   );
 };
 

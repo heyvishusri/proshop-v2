@@ -44,10 +44,10 @@ const PlaceOrderScreen = () => {
   };
 
   return (
-    <>
+    <div className="w-full max-w-full overflow-x-hidden">
       <CheckoutSteps step1 step2 step3 step4 />
-      <Row>
-        <Col md={8}>
+      <Row className="w-full max-w-full mx-0">
+        <Col xs={12} md={8} className="mb-4 md:mb-0">
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Shipping</h2>
@@ -99,8 +99,8 @@ const PlaceOrderScreen = () => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}>
-          <Card>
+        <Col xs={12} md={4} className="mt-4 md:mt-0">
+          <Card className="w-full max-w-full sticky top-20">
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h2>Order Summary</h2>
@@ -151,7 +151,7 @@ const PlaceOrderScreen = () => {
           </Card>
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 

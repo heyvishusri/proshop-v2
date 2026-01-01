@@ -18,7 +18,7 @@ const HomeScreen = () => {
   });
 
   return (
-    <>
+    <div className="w-full max-w-full overflow-x-hidden">
       {!keyword ? (
         <ProductCarousel />
       ) : (
@@ -35,22 +35,24 @@ const HomeScreen = () => {
       ) : (
         <>
           <Meta />
-          <h1>Latest Products</h1>
-          <Row>
+          <h1 className="text-xl sm:text-2xl md:text-3xl mb-4">Latest Products</h1>
+          <Row className="w-full max-w-full mx-0">
             {data.products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+              <Col key={product._id} xs={12} sm={6} md={6} lg={4} xl={3} className="mb-4">
                 <Product product={product} />
               </Col>
             ))}
           </Row>
-          <Paginate
-            pages={data.pages}
-            page={data.page}
-            keyword={keyword ? keyword : ""}
-          />
+          <div className="w-full max-w-full overflow-x-auto">
+            <Paginate
+              pages={data.pages}
+              page={data.page}
+              keyword={keyword ? keyword : ""}
+            />
+          </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 
