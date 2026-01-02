@@ -25,7 +25,7 @@ A production-ready eCommerce application featuring secure payment processing, ad
 ## 🖼️ Project UI Preview
 
 <div align="center">
-  <img src="screenshots/proshop-ui.png" alt="ProShop UI Preview" />
+  <img src="/screenshots/proshop-ui.png" alt="ProShop UI Preview" />
   <p><em>ProShop eCommerce Platform - Modern and intuitive user interface</em></p>
 </div>
 
