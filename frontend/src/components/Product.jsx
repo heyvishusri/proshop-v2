@@ -4,8 +4,8 @@ import Rating from './Rating';
 
 const Product = ({ product }) => {
   return (
-    <Card className='my-3 rounded h-90 shadow-sm border-0 overflow-hidden'>
-      <Link to={`/product/${product._id}`} className='d-block'>
+    <Card className='my-3 rounded h-90 shadow-sm border-0 overflow-hidden cursor-pointer transition-all hover:shadow-md'>
+      <Link to={`/product/${product._id}`} className='d-block cursor-pointer'>
         <Card.Img 
           src={product.image} 
           variant='top' 
@@ -17,7 +17,7 @@ const Product = ({ product }) => {
       </Link>
 
       <Card.Body className='d-flex flex-column p-3'>
-        <Link to={`/product/${product._id}`} className='text-decoration-none mb-2'>
+        <Link to={`/product/${product._id}`} className='text-decoration-none mb-2 cursor-pointer transition-colors hover:text-primary'>
           <Card.Title as='div' className='product-title mb-0'>
             <strong className='text-dark'>{product.name}</strong>
           </Card.Title>

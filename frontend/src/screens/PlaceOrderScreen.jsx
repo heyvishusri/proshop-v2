@@ -83,7 +83,7 @@ const PlaceOrderScreen = () => {
                           />
                         </Col>
                         <Col>
-                          <Link to={`/product/${item.product}`}>
+                          <Link to={`/product/${item.product}`} className="cursor-pointer transition-colors hover:text-primary">
                             {item.name}
                           </Link>
                         </Col>
@@ -136,7 +136,7 @@ const PlaceOrderScreen = () => {
                 <ListGroup.Item>
                   <Button
                     type='button'
-                    className='btn-block w-100'
+                    className='btn-block w-100 cursor-pointer transition-all hover:opacity-90 disabled:cursor-not-allowed'
                     disabled={cart.cartItems.length === 0}
                     onClick={placeOrderHandler}
                   >

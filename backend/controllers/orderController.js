@@ -112,13 +112,19 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     throw new Error("Invalid PayPal payment verification");
   }
 
+  // Extract email from different possible PayPal response structures
+  const emailAddress = req.body.payer?.email_address || 
+                       req.body.payer?.payer_info?.email ||
+                       req.body.payer?.email ||
+                       null;
+
   order.isPaid = true;
   order.paidAt = Date.now();
   order.paymentResult = {
     id: req.body.id,
-    status: req.body.status,
-    update_time: req.body.update_time,
-    email_address: req.body.payer?.email_address
+    status: req.body.status || "COMPLETED",
+    update_time: req.body.update_time || new Date().toISOString(),
+    email_address: emailAddress
   };
 
   const updatedOrder = await order.save();

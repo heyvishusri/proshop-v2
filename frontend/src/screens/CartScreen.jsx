@@ -58,7 +58,7 @@ const CartScreen = () => {
                     />
                   </Col>
                   <Col xs={8} sm={9} md={3} className='mb-2 mb-md-0'>
-                    <Link to={`/product/${item._id}`} className='text-decoration-none'>
+                    <Link to={`/product/${item._id}`} className='text-decoration-none cursor-pointer transition-colors hover:text-primary'>
                       {item.name}
                     </Link>
                   </Col>
@@ -87,6 +87,7 @@ const CartScreen = () => {
                       variant='light'
                       onClick={() => removeFromCartHandler(item._id)}
                       size='sm'
+                      className='cursor-pointer transition-all hover:opacity-90'
                     >
                       <FaTrash />
                     </Button>
@@ -113,7 +114,7 @@ const CartScreen = () => {
             <ListGroup.Item>
               <Button
                 type='button'
-                className='btn-block'
+                className='btn-block cursor-pointer transition-all hover:opacity-90 disabled:cursor-not-allowed'
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
               >

@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Cursor utilities for clickable elements */
+@layer utilities {
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  .cursor-not-allowed {
+    cursor: not-allowed;
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Override for specific elements that need longer transitions */
+.cursor-pointer,
+button,
+a,
+.card,
+[role="button"] {
+  transition-duration: 200ms;
+}
+
 main {
   min-height: 80vh;
   overflow-y: auto;
@@ -65,13 +92,22 @@ footer {
   flex-direction: column;
 }
 
-/* Product image container */
+/* Product image container with smooth transitions */
 .product-image {
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.2s ease;
 }
 
 .product-image:hover {
   transform: scale(1.02);
+}
+
+/* Card hover effects */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 table td,
@@ -212,11 +248,77 @@ table th {
   }
 }
 
-/* Improve accessibility */
-a:focus,
-button:focus {
+/* Remove blue focus outline on click for header and navigation elements */
+.nav-link:focus,
+.navbar-brand:focus,
+.dropdown-item:focus,
+.nav-dropdown:focus,
+.nav-link:focus-visible,
+.navbar-brand:focus-visible,
+.dropdown-item:focus-visible,
+.nav-dropdown:focus-visible,
+.navbar-toggler:focus,
+.navbar-toggler:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove outline for all links and buttons on click */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep focus-visible for keyboard navigation accessibility (only shows when using keyboard) */
+a:focus-visible,
+button:focus-visible {
   outline: 2px solid #0d6efd;
   outline-offset: 2px;
+}
+
+/* PayPal button container styling */
+.paypal-button-container {
+  transition: opacity 0.3s ease;
+}
+
+.paypal-button-container:hover {
+  opacity: 0.95;
+}
+
+/* Ensure PayPal buttons have proper cursor */
+.paypal-button-container button {
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+}
+
+.paypal-button-container button:hover {
+  transform: scale(1.02);
+}
+
+/* Button hover effects */
+.btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Link hover effects */
+a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
 }
 
 /* Better image loading */

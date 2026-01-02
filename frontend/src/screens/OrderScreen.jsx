@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
@@ -15,6 +15,7 @@ import {
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
+  const [paypalError, setPaypalError] = useState(null);
 
   const {
     data: order,
@@ -39,75 +40,118 @@ const OrderScreen = () => {
   } = useGetPaypalClientIdQuery();
 
   useEffect(() => {
-    if (!errorPayPal && !loadingPayPal && paypal.clientId) {
+    if (!errorPayPal && !loadingPayPal && paypal?.clientId) {
       const loadPaypalScript = async () => {
-        paypalDispatch({
-          type: 'resetOptions',
-          value: {
-            'client-id': paypal.clientId,
-            currency: 'USD',
-          },
-        });
-        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+        try {
+          paypalDispatch({
+            type: 'resetOptions',
+            value: {
+              'client-id': paypal.clientId,
+              currency: 'USD',
+              intent: 'capture',
+            },
+          });
+          paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+          setPaypalError(null);
+        } catch (err) {
+          console.error('PayPal script loading error:', err);
+          setPaypalError('Failed to load PayPal. Please refresh the page.');
+        }
       };
       if (order && !order.isPaid) {
         if (!window.paypal) {
           loadPaypalScript();
         }
       }
+    } else if (errorPayPal) {
+      setPaypalError('PayPal configuration error. Please contact support.');
     }
   }, [errorPayPal, loadingPayPal, order, paypal, paypalDispatch]);
 
-  function onApprove(data, actions) {
-    return actions.order.capture().then(async function (details) {
-      try {
-        await payOrder({ orderId, details });
-        refetch();
-        toast.success('Order is paid');
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
+  async function createOrder(data, actions) {
+    try {
+      if (!order || !order.totalPrice) {
+        throw new Error('Order information is missing');
       }
-    });
-  }
 
-  // TESTING ONLY! REMOVE BEFORE PRODUCTION
-  // async function onApproveTest() {
-  //   await payOrder({ orderId, details: { payer: {} } });
-  //   refetch();
-
-  //   toast.success('Order is paid');
-  // }
-
-  function onError(err) {
-    toast.error(err.message);
-  }
-
-  function createOrder(data, actions) {
-    return actions.order
-      .create({
+      return actions.order.create({
         purchase_units: [
           {
-            amount: { value: order.totalPrice },
+            amount: {
+              value: parseFloat(order.totalPrice).toFixed(2),
+              currency_code: 'USD',
+            },
+            description: `Order ${order._id}`,
           },
         ],
-      })
-      .then((orderID) => {
-        return orderID;
       });
+    } catch (err) {
+      console.error('Create order error:', err);
+      toast.error('Failed to create PayPal order. Please try again.');
+      throw err;
+    }
+  }
+
+  async function onApprove(data, actions) {
+    try {
+      const details = await actions.order.capture();
+      
+      if (!details || !details.id) {
+        throw new Error('Invalid payment response from PayPal');
+      }
+
+      // Send payment details to backend
+      const paymentData = {
+        id: details.id,
+        status: details.status,
+        update_time: details.update_time,
+        payer: {
+          email_address: details.payer?.email_address || details.payer?.payer_info?.email,
+        },
+      };
+
+      await payOrder({ orderId, details: paymentData }).unwrap();
+      await refetch();
+      toast.success('Payment successful! Your order has been confirmed.');
+      setPaypalError(null);
+    } catch (err) {
+      console.error('Payment error:', err);
+      const errorMessage = err?.data?.message || err?.message || 'Payment failed. Please try again.';
+      toast.error(errorMessage);
+      setPaypalError(errorMessage);
+    }
+  }
+
+  function onError(err) {
+    console.error('PayPal error:', err);
+    const errorMessage = err?.message || 'An error occurred with PayPal. Please try again or use a different payment method.';
+    toast.error(errorMessage);
+    setPaypalError(errorMessage);
+  }
+
+  function onCancel(data) {
+    console.log('PayPal payment cancelled:', data);
+    toast.info('Payment was cancelled. You can try again when ready.');
+    setPaypalError(null);
   }
 
   const deliverHandler = async () => {
-    await deliverOrder(orderId);
-    refetch();
+    try {
+      await deliverOrder(orderId).unwrap();
+      await refetch();
+      toast.success('Order marked as delivered');
+    } catch (err) {
+      toast.error(err?.data?.message || 'Failed to update delivery status');
+    }
   };
 
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant='danger'>{error.data.message}</Message>
+    <Message variant='danger'>{error?.data?.message || error?.error || 'Failed to load order'}</Message>
   ) : (
     <>
-      <h1>Order {order._id}</h1>
+      <h1 className='mb-4'>Order {order._id}</h1>
       <Row>
         <Col xs={12} lg={8} className='mb-4'>
           <ListGroup variant='flush'>
@@ -118,7 +162,9 @@ const OrderScreen = () => {
               </p>
               <p>
                 <strong>Email: </strong>{' '}
-                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+                <a href={`mailto:${order.user.email}`} className='text-decoration-none cursor-pointer transition-colors hover:text-primary'>
+                  {order.user.email}
+                </a>
               </p>
               <p>
                 <strong>Address:</strong>
@@ -128,7 +174,7 @@ const OrderScreen = () => {
               </p>
               {order.isDelivered ? (
                 <Message variant='success'>
-                  Delivered on {order.deliveredAt}
+                  Delivered on {new Date(order.deliveredAt).toLocaleDateString()}
                 </Message>
               ) : (
                 <Message variant='danger'>Not Delivered</Message>
@@ -142,7 +188,9 @@ const OrderScreen = () => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant='success'>Paid on {order.paidAt}</Message>
+                <Message variant='success'>
+                  Paid on {new Date(order.paidAt).toLocaleDateString()}
+                </Message>
               ) : (
                 <Message variant='danger'>Not Paid</Message>
               )}
@@ -168,7 +216,10 @@ const OrderScreen = () => {
                           />
                         </Col>
                         <Col xs={9} sm={6} md={7}>
-                          <Link to={`/product/${item.product}`} className='text-decoration-none'>
+                          <Link 
+                            to={`/product/${item.product}`} 
+                            className='text-decoration-none cursor-pointer transition-colors hover:text-primary'
+                          >
                             {item.name}
                           </Link>
                         </Col>
@@ -184,59 +235,75 @@ const OrderScreen = () => {
           </ListGroup>
         </Col>
         <Col xs={12} lg={4}>
-          <Card>
+          <Card className='shadow-sm border-0' style={{ borderRadius: '8px' }}>
             <ListGroup variant='flush'>
               <ListGroup.Item>
-                <h2>Order Summary</h2>
+                <h2 className='mb-0'>Order Summary</h2>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>${order.itemsPrice}</Col>
+                  <Col className='text-end'>${order.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>${order.shippingPrice}</Col>
+                  <Col className='text-end'>${order.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${order.taxPrice}</Col>
+                  <Col className='text-end'>${order.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Total</Col>
-                  <Col>${order.totalPrice}</Col>
+                  <Col><strong>Total</strong></Col>
+                  <Col className='text-end'><strong>${order.totalPrice}</strong></Col>
                 </Row>
               </ListGroup.Item>
               {!order.isPaid && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
+                  
+                  {paypalError && (
+                    <Message variant='danger' className='mb-3'>
+                      {paypalError}
+                    </Message>
+                  )}
 
-                  {isPending ? (
-                    <Loader />
-                  ) : (
-                    <div>
-                      {/* THIS BUTTON IS FOR TESTING! REMOVE BEFORE PRODUCTION! */}
-                      {/* <Button
-                        style={{ marginBottom: '10px' }}
-                        onClick={onApproveTest}
-                      >
-                        Test Pay Order
-                      </Button> */}
+                  {errorPayPal && (
+                    <Message variant='danger' className='mb-3'>
+                      Failed to load PayPal. Please refresh the page.
+                    </Message>
+                  )}
 
-                      <div>
-                        <PayPalButtons
-                          createOrder={createOrder}
-                          onApprove={onApprove}
-                          onError={onError}
-                        ></PayPalButtons>
-                      </div>
+                  {isPending || loadingPayPal ? (
+                    <div className='text-center py-4'>
+                      <Loader />
+                      <p className='mt-2 text-muted'>Loading PayPal...</p>
                     </div>
+                  ) : paypal?.clientId ? (
+                    <div className='paypal-button-container'>
+                      <PayPalButtons
+                        createOrder={createOrder}
+                        onApprove={onApprove}
+                        onError={onError}
+                        onCancel={onCancel}
+                        style={{
+                          layout: 'vertical',
+                          color: 'blue',
+                          shape: 'rect',
+                          label: 'paypal',
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <Message variant='warning'>
+                      PayPal is not configured. Please contact support.
+                    </Message>
                   )}
                 </ListGroup.Item>
               )}
@@ -250,8 +317,9 @@ const OrderScreen = () => {
                   <ListGroup.Item>
                     <Button
                       type='button'
-                      className='btn btn-block'
+                      className='w-100 cursor-pointer transition-all hover:opacity-90'
                       onClick={deliverHandler}
+                      style={{ borderRadius: '6px' }}
                     >
                       Mark As Delivered
                     </Button>

@@ -67,7 +67,7 @@ const ProductScreen = () => {
 
   return (
     <>
-      <Link className='btn btn-light my-3' to='/'>
+      <Link className='btn btn-light my-3 cursor-pointer transition-all hover:opacity-90' to='/'>
         Go Back
       </Link>
       {isLoading ? (
@@ -162,7 +162,7 @@ const ProductScreen = () => {
                   )}
 
                   <Button
-                    className='w-100'
+                    className='w-100 cursor-pointer transition-all hover:opacity-90 disabled:cursor-not-allowed'
                     type='button'
                     disabled={product.countInStock === 0}
                     onClick={addToCartHandler}
@@ -271,7 +271,7 @@ const ProductScreen = () => {
                         disabled={loadingProductReview}
                         type='submit'
                         variant='primary'
-                        className='px-4'
+                        className='px-4 cursor-pointer transition-all hover:opacity-90 disabled:cursor-not-allowed'
                         style={{ minWidth: '120px' }}
                       >
                         {loadingProductReview ? 'Submitting...' : 'Submit Review'}
@@ -279,7 +279,7 @@ const ProductScreen = () => {
                     </Form>
                   ) : (
                     <Message>
-                      Please <Link to='/login'>sign in</Link> to write a review
+                      Please <Link to='/login' className='cursor-pointer transition-colors hover:text-primary'>sign in</Link> to write a review
                     </Message>
                   )}
                 </Card.Body>
