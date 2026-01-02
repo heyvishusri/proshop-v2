@@ -18,7 +18,8 @@ const OrderListScreen = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
+        <div className="table-responsive-wrapper">
+          <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
               <th>ID</th>
@@ -65,6 +66,7 @@ const OrderListScreen = () => {
             ))}
           </tbody>
         </Table>
+        </div>
       )}
     </>
   );

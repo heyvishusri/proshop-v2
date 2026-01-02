@@ -2,46 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Prevent horizontal overflow globally */
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  overflow-x: hidden;
-  max-width: 100vw;
-  width: 100%;
-}
-
-body {
-  position: relative;
-}
-
 main {
   min-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Sticky header and footer */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
   width: 100%;
-  max-width: 100%;
+}
+
+/* Rating component - horizontal display with flex */
+.rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
 }
 
 .rating span {
-  margin: 0.1rem;
+  display: flex;
+  align-items: center;
+  line-height: 1;
 }
 
 .rating svg {
   color: #f8e825;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .rating-text {
   font-size: 0.8rem;
   font-weight: 600;
-  padding-left: 0.5rem;
+  margin-left: 0.5rem;
+  line-height: 1.2;
 }
 
+/* Product card styling */
 .product-title {
   height: 2.5em; /* Set a fixed height */
   overflow: hidden; /* Hide overflow content */
   text-overflow: ellipsis; /* Add ellipsis for long text */
   white-space: nowrap; /* Prevent wrapping */
+  line-height: 1.4;
+}
+
+/* Product card body spacing */
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Product image container */
+.product-image {
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.02);
 }
 
 table td,
@@ -54,14 +84,55 @@ table th {
 }
 
 .review h2 {
-  font-size: 24px;
-  background: #f4f4f4;
-  padding: 10px;
-  border: 1px solid #ddd;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
 }
 
-.review button {
-  margin-top: 10px;
+.review h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Review cards styling - Beautiful design matching product cards */
+.review .card {
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.review .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+  border-color: #dee2e6;
+}
+
+/* Review card body styling */
+.review .card-body {
+  background: #fff;
+}
+
+/* Rating component in reviews */
+.review .rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.review .rating svg {
+  font-size: 1rem;
+}
+
+/* Review form styling */
+.review .form-label {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.review .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
 .carousel-caption {
@@ -72,17 +143,84 @@ table th {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
 }
+
 /* Responsive table wrapper */
 .table-responsive-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  width: 100%;
-  max-width: 100%;
 }
 
-/* Ensure images don't overflow */
+.table-responsive-wrapper table {
+  min-width: 600px;
+}
+
+/* Product image responsive */
+.product-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .product-title {
+    height: auto;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  
+  .carousel-caption h2 {
+    font-size: 1rem;
+  }
+  
+  .table-responsive-wrapper {
+    margin: 0 -15px;
+    padding: 0 15px;
+  }
+  
+  /* Better spacing on mobile */
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  /* Improve button sizes on mobile */
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust main padding for fixed footer on mobile */
+  main {
+    padding-bottom: 100px !important;
+  }
+  
+  /* Review section on mobile */
+  .review h2 {
+    font-size: 20px;
+  }
+  
+  /* Product screen improvements */
+  .review .card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Better spacing for product details */
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+/* Improve accessibility */
+a:focus,
+button:focus {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+/* Better image loading */
 img {
   max-width: 100%;
   height: auto;
-  object-fit: contain;
 }

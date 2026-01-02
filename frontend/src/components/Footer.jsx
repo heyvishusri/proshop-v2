@@ -4,11 +4,11 @@ import { Container, Row, Col } from "react-bootstrap";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="w-full max-w-full mt-auto bg-gray-100 border-t">
-      <Container className="w-full max-w-full px-2 sm:px-4">
+    <footer className="py-3 bg-light border-top" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1030 }}>
+      <Container>
         <Row>
-          <Col className="text-center py-3">
-            <p className="text-sm sm:text-base m-0">ProShop &copy; {currentYear}</p>
+          <Col className="text-center">
+            <p className="mb-0">ProShop &copy; {currentYear}</p>
           </Col>
         </Row>
       </Container>

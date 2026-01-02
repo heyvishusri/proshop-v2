@@ -1,23 +1,38 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Container } from "react-bootstrap";
-import CollapsibleExample from "./components/Header";
-import Footer from "./components/Footer";
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Container } from 'react-bootstrap';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { logout } from './slices/authSlice';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-  return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden max-w-full">
-      <CollapsibleExample />
+  const dispatch = useDispatch();
 
-      <main className="py-3 flex-1 w-full max-w-full">
-        <Container className="w-full max-w-full px-2 sm:px-4">
+  useEffect(() => {
+    const expirationTime = localStorage.getItem('expirationTime');
+    if (expirationTime) {
+      const currentTime = new Date().getTime();
+
+      if (currentTime > expirationTime) {
+        dispatch(logout());
+      }
+    }
+  }, [dispatch]);
+
+  return (
+    <div className="d-flex flex-column min-vh-100">
+      <ToastContainer />
+      <Header />
+      <main className='py-3 flex-grow-1' style={{ paddingBottom: '80px', paddingTop: '20px' }}>
+        <Container>
           <Outlet />
         </Container>
       </main>
       <Footer />
-      <ToastContainer />
     </div>
   );
 };

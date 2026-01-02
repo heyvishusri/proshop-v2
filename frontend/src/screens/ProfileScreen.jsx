@@ -55,7 +55,7 @@ const ProfileScreen = () => {
 
   return (
     <Row>
-      <Col md={3}>
+      <Col xs={12} md={3} className='mb-4'>
         <h2>User Profile</h2>
 
         <Form onSubmit={submitHandler}>
@@ -105,7 +105,7 @@ const ProfileScreen = () => {
           {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
-      <Col md={9}>
+      <Col xs={12} md={9}>
         <h2>My Orders</h2>
         {isLoading ? (
           <Loader />
@@ -114,7 +114,8 @@ const ProfileScreen = () => {
             {error?.data?.message || error.error}
           </Message>
         ) : (
-          <Table striped hover responsive className="table-sm">
+          <div className="table-responsive-wrapper">
+            <Table striped hover responsive className="table-sm">
             <thead>
               <tr>
                 <th>ID</th>
@@ -126,7 +127,7 @@ const ProfileScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orders && orders.length > 0 ? orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
@@ -156,9 +157,16 @@ const ProfileScreen = () => {
                     </Button>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={6} className='text-center'>
+                    No orders found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </Table>
+          </div>
         )}
       </Col>
     </Row>

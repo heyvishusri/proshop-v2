@@ -1,28 +1,28 @@
-import { Table, Button, Row, Col } from "react-bootstrap";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
-import Message from "../../components/Message";
-import Loader from "../../components/Loader";
-import Paginate from "../../components/Paginate";
+import { Table, Button, Row, Col } from 'react-bootstrap';
+import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
+import { Link, useParams } from 'react-router-dom';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
+import Paginate from '../../components/Paginate';
 import {
   useGetProductsQuery,
   useDeleteProductMutation,
-  useCreateProductMutation
-} from "../../slices/productsApiSlice";
-import { toast } from "react-toastify";
+  useCreateProductMutation,
+} from '../../slices/productsApiSlice';
+import { toast } from 'react-toastify';
 
 const ProductListScreen = () => {
   const { pageNumber } = useParams();
 
   const { data, isLoading, error, refetch } = useGetProductsQuery({
-    pageNumber
+    pageNumber,
   });
 
   const [deleteProduct, { isLoading: loadingDelete }] =
     useDeleteProductMutation();
 
   const deleteHandler = async (id) => {
-    if (window.confirm("Are you sure")) {
+    if (window.confirm('Are you sure')) {
       try {
         await deleteProduct(id);
         refetch();
@@ -36,7 +36,7 @@ const ProductListScreen = () => {
     useCreateProductMutation();
 
   const createProductHandler = async () => {
-    if (window.confirm("Are you sure you want to create a new product?")) {
+    if (window.confirm('Are you sure you want to create a new product?')) {
       try {
         await createProduct();
         refetch();
@@ -47,13 +47,13 @@ const ProductListScreen = () => {
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden">
-      <Row className="align-items-center w-full max-w-full mx-0 mb-3">
-        <Col xs={12} sm={6} className="mb-2 sm:mb-0">
-          <h1 className="text-xl sm:text-2xl m-0">Products</h1>
+    <>
+      <Row className='align-items-center'>
+        <Col>
+          <h1>Products</h1>
         </Col>
-        <Col xs={12} sm={6} className="text-start sm:text-end">
-          <Button className="w-full sm:w-auto my-3" onClick={createProductHandler}>
+        <Col className='text-end'>
+          <Button className='my-3' onClick={createProductHandler}>
             <FaPlus /> Create Product
           </Button>
         </Col>
@@ -64,13 +64,10 @@ const ProductListScreen = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.error}
-        </Message>
+        <Message variant='danger'>{error.data.message}</Message>
       ) : (
         <>
-          <div className="table-responsive-wrapper">
-            <Table striped bordered hover responsive className="table-sm w-full">
+          <Table striped bordered hover responsive className='table-sm'>
             <thead>
               <tr>
                 <th>ID</th>
@@ -93,30 +90,27 @@ const ProductListScreen = () => {
                     <Button
                       as={Link}
                       to={`/admin/product/${product._id}/edit`}
-                      variant="light"
-                      className="btn-sm mx-2"
+                      variant='light'
+                      className='btn-sm mx-2'
                     >
                       <FaEdit />
                     </Button>
                     <Button
-                      variant="danger"
-                      className="btn-sm"
+                      variant='danger'
+                      className='btn-sm'
                       onClick={() => deleteHandler(product._id)}
                     >
-                      <FaTrash style={{ color: "white" }} />
+                      <FaTrash style={{ color: 'white' }} />
                     </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          </div>
-          <div className="w-full max-w-full overflow-x-auto mt-3">
-            <Paginate pages={data.pages} page={data.page} isAdmin={true} />
-          </div>
+          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
         </>
       )}
-    </div>
+    </>
   );
 };
 

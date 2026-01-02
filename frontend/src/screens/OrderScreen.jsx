@@ -1,17 +1,17 @@
-import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import Message from "../components/Message";
-import Loader from "../components/Loader";
+import { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import Message from '../components/Message';
+import Loader from '../components/Loader';
 import {
   useDeliverOrderMutation,
   useGetOrderDetailsQuery,
   useGetPaypalClientIdQuery,
-  usePayOrderMutation
-} from "../slices/ordersApiSlice";
+  usePayOrderMutation,
+} from '../slices/ordersApiSlice';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -20,7 +20,7 @@ const OrderScreen = () => {
     data: order,
     refetch,
     isLoading,
-    error
+    error,
   } = useGetOrderDetailsQuery(orderId);
 
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
@@ -35,20 +35,20 @@ const OrderScreen = () => {
   const {
     data: paypal,
     isLoading: loadingPayPal,
-    error: errorPayPal
+    error: errorPayPal,
   } = useGetPaypalClientIdQuery();
 
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
       const loadPaypalScript = async () => {
         paypalDispatch({
-          type: "resetOptions",
+          type: 'resetOptions',
           value: {
-            "client-id": paypal.clientId,
-            currency: "USD"
-          }
+            'client-id': paypal.clientId,
+            currency: 'USD',
+          },
         });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
       };
       if (order && !order.isPaid) {
         if (!window.paypal) {
@@ -63,7 +63,7 @@ const OrderScreen = () => {
       try {
         await payOrder({ orderId, details });
         refetch();
-        toast.success("Order is paid");
+        toast.success('Order is paid');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -71,12 +71,12 @@ const OrderScreen = () => {
   }
 
   // TESTING ONLY! REMOVE BEFORE PRODUCTION
-  async function onApproveTest() {
-    await payOrder({ orderId, details: { payer: {} } });
-    refetch();
+  // async function onApproveTest() {
+  //   await payOrder({ orderId, details: { payer: {} } });
+  //   refetch();
 
-    toast.success("Order is paid");
-  }
+  //   toast.success('Order is paid');
+  // }
 
   function onError(err) {
     toast.error(err.message);
@@ -87,58 +87,51 @@ const OrderScreen = () => {
       .create({
         purchase_units: [
           {
-            amount: { value: order.totalPrice }
-          }
-        ]
+            amount: { value: order.totalPrice },
+          },
+        ],
       })
       .then((orderID) => {
         return orderID;
       });
   }
 
-  const deliverOrderHandler = async () => {
-    try {
-      await deliverOrder(orderId);
-      refetch();
-      toast.success("Order is delivered");
-    } catch (err) {
-      toast.error(err?.data?.message || err.error);
-    }
+  const deliverHandler = async () => {
+    await deliverOrder(orderId);
+    refetch();
   };
 
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant="danger">
-      {error?.data?.message || error?.error || "Something went wrong"}
-    </Message>
+    <Message variant='danger'>{error.data.message}</Message>
   ) : (
-    <div className="w-full max-w-full overflow-x-hidden">
-      <h1 className="text-xl sm:text-2xl mb-4">Order {order._id}</h1>
-      <Row className="w-full max-w-full mx-0">
-        <Col xs={12} md={8} className="mb-4 md:mb-0">
-          <ListGroup variant="flush" className="w-full">
-            <ListGroup.Item className="w-full">
-              <h2 className="text-lg sm:text-xl mb-2">Shipping</h2>
-              <p className="text-sm sm:text-base break-words">
+    <>
+      <h1>Order {order._id}</h1>
+      <Row>
+        <Col xs={12} lg={8} className='mb-4'>
+          <ListGroup variant='flush'>
+            <ListGroup.Item>
+              <h2>Shipping</h2>
+              <p>
                 <strong>Name: </strong> {order.user.name}
               </p>
-              <p className="text-sm sm:text-base break-words">
-                <strong>Email: </strong>{" "}
-                <a href={`mailto:${order.user.email}`} className="break-all">{order.user.email}</a>
+              <p>
+                <strong>Email: </strong>{' '}
+                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
               </p>
-              <p className="text-sm sm:text-base break-words">
+              <p>
                 <strong>Address:</strong>
-                {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
-                {order.shippingAddress.postalCode},{" "}
+                {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
+                {order.shippingAddress.postalCode},{' '}
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
-                <Message variant="success">
+                <Message variant='success'>
                   Delivered on {order.deliveredAt}
                 </Message>
               ) : (
-                <Message variant="danger">Not Delivered</Message>
+                <Message variant='danger'>Not Delivered</Message>
               )}
             </ListGroup.Item>
 
@@ -149,9 +142,9 @@ const OrderScreen = () => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">Paid on {order.paidAt}</Message>
+                <Message variant='success'>Paid on {order.paidAt}</Message>
               ) : (
-                <Message variant="danger">Not Paid</Message>
+                <Message variant='danger'>Not Paid</Message>
               )}
             </ListGroup.Item>
 
@@ -160,26 +153,27 @@ const OrderScreen = () => {
               {order.orderItems.length === 0 ? (
                 <Message>Order is empty</Message>
               ) : (
-                <ListGroup variant="flush" className="w-full">
+                <ListGroup variant='flush'>
                   {order.orderItems.map((item, index) => (
-                    <ListGroup.Item key={index} className="w-full px-0 sm:px-2">
-                      <Row className="w-full mx-0 items-center">
-                        <Col xs={4} sm={3} md={2} className="mb-2 sm:mb-0">
+                    <ListGroup.Item key={index}>
+                      <Row>
+                        <Col xs={3} sm={2} md={1}>
                           <Image
                             src={item.image}
                             alt={item.name}
                             fluid
                             rounded
-                            className="w-full h-auto object-contain"
+                            className='w-100'
+                            style={{ maxHeight: '60px', objectFit: 'contain' }}
                           />
                         </Col>
-                        <Col xs={12} sm={6} md={6} className="mb-2 sm:mb-0">
-                          <Link to={`/product/${item.product}`} className="text-sm sm:text-base break-words">
+                        <Col xs={9} sm={6} md={7}>
+                          <Link to={`/product/${item.product}`} className='text-decoration-none'>
                             {item.name}
                           </Link>
                         </Col>
-                        <Col xs={8} sm={3} md={4} className="text-sm sm:text-base">
-                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                        <Col xs={12} sm={4} md={4} className='text-start text-md-end mt-2 mt-sm-0'>
+                          {item.qty} x ${item.price} = ${(item.qty * item.price).toFixed(2)}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -189,9 +183,9 @@ const OrderScreen = () => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col xs={12} md={4} className="mt-4 md:mt-0">
-          <Card className="w-full max-w-full sticky top-20">
-            <ListGroup variant="flush">
+        <Col xs={12} lg={4}>
+          <Card>
+            <ListGroup variant='flush'>
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>
@@ -228,14 +222,14 @@ const OrderScreen = () => {
                   ) : (
                     <div>
                       {/* THIS BUTTON IS FOR TESTING! REMOVE BEFORE PRODUCTION! */}
-                      <Button
-                        className="w-full mb-2"
+                      {/* <Button
+                        style={{ marginBottom: '10px' }}
                         onClick={onApproveTest}
                       >
                         Test Pay Order
-                      </Button>
+                      </Button> */}
 
-                      <div className="w-full overflow-x-auto">
+                      <div>
                         <PayPalButtons
                           createOrder={createOrder}
                           onApprove={onApprove}
@@ -255,9 +249,9 @@ const OrderScreen = () => {
                 !order.isDelivered && (
                   <ListGroup.Item>
                     <Button
-                      type="button"
-                      className="w-full"
-                      onClick={deliverOrderHandler}
+                      type='button'
+                      className='btn btn-block'
+                      onClick={deliverHandler}
                     >
                       Mark As Delivered
                     </Button>
@@ -267,7 +261,7 @@ const OrderScreen = () => {
           </Card>
         </Col>
       </Row>
-    </div>
+    </>
   );
 };
 

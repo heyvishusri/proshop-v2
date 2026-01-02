@@ -1,29 +1,38 @@
-import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Rating from "./Rating";
+import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Rating from './Rating';
 
 const Product = ({ product }) => {
   return (
-    <Card className="my-3 p-2 sm:p-3 rounded w-full max-w-full h-full flex flex-col">
-      <Link to={`/product/${product._id}`} className="block w-full">
-        <Card.Img src={product.image} variant="top" className="w-full h-auto object-contain max-h-48 sm:max-h-64" />
+    <Card className='my-3 rounded h-90 shadow-sm border-0 overflow-hidden'>
+      <Link to={`/product/${product._id}`} className='d-block'>
+        <Card.Img 
+          src={product.image} 
+          variant='top' 
+          className='product-image'
+          style={{ height: '200px', objectFit: 'cover', width: '100%' }}
+          alt={product.name}
+          loading='lazy'
+        />
       </Link>
 
-      <Card.Body className="flex flex-col flex-grow p-2 sm:p-3">
-        <Link to={`/product/${product._id}`} className="block w-full">
-          <Card.Title as="div" className="product-title text-sm sm:text-base">
-            <strong>{product.name}</strong>
+      <Card.Body className='d-flex flex-column p-3'>
+        <Link to={`/product/${product._id}`} className='text-decoration-none mb-2'>
+          <Card.Title as='div' className='product-title mb-0'>
+            <strong className='text-dark'>{product.name}</strong>
           </Card.Title>
         </Link>
 
-        <Card.Text as="div" className="mt-2">
+        <div className='mb-2'>
           <Rating
             value={product.rating}
             text={`${product.numReviews} reviews`}
           />
-        </Card.Text>
+        </div>
 
-        <Card.Text as="h3" className="text-lg sm:text-xl font-bold mt-2">${product.price}</Card.Text>
+        <Card.Text as='h3' className='mt-2 mb-0 fw-bold text-primary'>
+          ${product.price}
+        </Card.Text>
       </Card.Body>
     </Card>
   );
