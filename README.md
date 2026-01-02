@@ -22,6 +22,13 @@ A production-ready eCommerce application featuring secure payment processing, ad
 - 💰 **Server-side price calculation** to prevent manipulation
 - 🛡️ **Security enhancements** including ObjectId validation and transaction ID verification
 
+## 🖼️ Project UI Preview
+
+<div align="center">
+  <img src="screenshots/proshop-ui.png" alt="ProShop UI Preview" />
+  <p><em>ProShop eCommerce Platform - Modern and intuitive user interface</em></p>
+</div>
+
 ## 🛠️ Tech Stack
 
 ### Frontend
