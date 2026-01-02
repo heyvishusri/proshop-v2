@@ -12,6 +12,7 @@ import {
 import { FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
 import { addToCart, removeFromCart } from '../slices/cartSlice';
+import { getImageUrl } from '../utils/imageUtils';
 
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -49,12 +50,15 @@ const CartScreen = () => {
                 <Row className='align-items-center'>
                   <Col xs={4} sm={3} md={2} className='mb-2 mb-md-0'>
                     <Image 
-                      src={item.image} 
+                      src={getImageUrl(item.image)} 
                       alt={item.name} 
                       fluid 
                       rounded 
                       className='w-100'
                       style={{ maxHeight: '80px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        e.target.src = '/images/sample.jpg';
+                      }}
                     />
                   </Col>
                   <Col xs={8} sm={9} md={3} className='mb-2 mb-md-0'>

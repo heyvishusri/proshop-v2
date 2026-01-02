@@ -12,6 +12,7 @@ import {
   useGetPaypalClientIdQuery,
   usePayOrderMutation,
 } from '../slices/ordersApiSlice';
+import { getImageUrl } from '../utils/imageUtils';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -207,12 +208,15 @@ const OrderScreen = () => {
                       <Row>
                         <Col xs={3} sm={2} md={1}>
                           <Image
-                            src={item.image}
+                            src={getImageUrl(item.image)}
                             alt={item.name}
                             fluid
                             rounded
                             className='w-100'
                             style={{ maxHeight: '60px', objectFit: 'contain' }}
+                            onError={(e) => {
+                              e.target.src = '/images/sample.jpg';
+                            }}
                           />
                         </Col>
                         <Col xs={9} sm={6} md={7}>

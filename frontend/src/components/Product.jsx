@@ -1,18 +1,22 @@
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Rating from './Rating';
+import { getImageUrl } from '../utils/imageUtils';
 
 const Product = ({ product }) => {
   return (
     <Card className='my-3 rounded h-90 shadow-sm border-0 overflow-hidden cursor-pointer transition-all hover:shadow-md'>
       <Link to={`/product/${product._id}`} className='d-block cursor-pointer'>
         <Card.Img 
-          src={product.image} 
+          src={getImageUrl(product.image)} 
           variant='top' 
           className='product-image'
           style={{ height: '200px', objectFit: 'cover', width: '100%' }}
           alt={product.name}
           loading='lazy'
+          onError={(e) => {
+            e.target.src = '/images/sample.jpg';
+          }}
         />
       </Link>
 

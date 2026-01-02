@@ -64,8 +64,8 @@ const Header = () => {
                   </NavDropdown>
                 </>
               ) : (
-                <Nav.Link as={Link} to='/login' className='cursor-pointer transition-opacity hover:opacity-90'>
-                  <FaUser /> Sign In
+                <Nav.Link as={Link} to='/login' className='d-flex align-items-center cursor-pointer transition-opacity hover:opacity-90'>
+                  <FaUser /> <span className='ms-1'>Sign In</span>
                 </Nav.Link>
               )}
 

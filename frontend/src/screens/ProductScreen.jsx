@@ -21,6 +21,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
 import { addToCart } from '../slices/cartSlice';
+import { getImageUrl } from '../utils/imageUtils';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -83,12 +84,15 @@ const ProductScreen = () => {
             <Col xs={12} md={6} className='mb-3'>
               <Card className='border-0 shadow-sm' style={{ borderRadius: '8px', overflow: 'hidden' }}>
                 <Image 
-                  src={product.image} 
+                  src={getImageUrl(product.image)} 
                   alt={product.name} 
                   fluid 
                   className='w-100'
                   style={{ maxHeight: '500px', objectFit: 'contain', padding: '20px' }}
                   loading='lazy'
+                  onError={(e) => {
+                    e.target.src = '/images/sample.jpg';
+                  }}
                 />
               </Card>
             </Col>

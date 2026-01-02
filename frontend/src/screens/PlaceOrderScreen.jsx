@@ -8,6 +8,7 @@ import CheckoutSteps from '../components/CheckoutSteps';
 import Loader from '../components/Loader';
 import { useCreateOrderMutation } from '../slices/ordersApiSlice';
 import { clearCartItems } from '../slices/cartSlice';
+import { getImageUrl } from '../utils/imageUtils';
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate();
@@ -76,10 +77,13 @@ const PlaceOrderScreen = () => {
                       <Row>
                         <Col md={1}>
                           <Image
-                            src={item.image}
+                            src={getImageUrl(item.image)}
                             alt={item.name}
                             fluid
                             rounded
+                            onError={(e) => {
+                              e.target.src = '/images/sample.jpg';
+                            }}
                           />
                         </Col>
                         <Col>
